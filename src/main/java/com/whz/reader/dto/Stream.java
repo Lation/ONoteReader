@@ -3,7 +3,7 @@ package com.whz.reader.dto;
 import java.util.UUID;
 
 /**
- * Stream DTO which refers to an oNote Stream. An stream is a lane in which
+ * Stream DTO which refers to an oNote Stream. A stream is a lane in which
  * events reside.
  * 
  * @author Timon Schwalbe

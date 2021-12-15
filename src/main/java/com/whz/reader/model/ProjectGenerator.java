@@ -101,11 +101,10 @@ public class ProjectGenerator {
 	 * of its Events (in the same Stream) and every other Note that is connected to
 	 * at least one of these specific Events.
 	 * 
-	 * If the oNote Event Model only contains the default Stream, the Streams of the
-	 * JSON file will be completely empty (this seriously needs to be fixed!).
-	 * Therefore no Notes (Commands, Events, Read Models) can be assigned to any
-	 * Stream and therefore The project would be completely emptry since no Bounded
-	 * Context exists.
+	 * If the oNote Event Model contains a "Default" Stream, all Events inside this
+	 * Stream and all related Notes will be added to a separate "DefaultStream"
+	 * project. This should be avoided by the user since a Bounded Context should
+	 * have a proper name.
 	 * 
 	 * @param projectComboBoxIndex - The project creation option selected by the
 	 *                             user
@@ -115,10 +114,8 @@ public class ProjectGenerator {
 	 *         false if not
 	 */
 	private static boolean createBoundedContexts(int projectComboBoxIndex, String projectPath, String namespace) {
-		if (JSONParser.eventModel.getStreams().isEmpty()) {
-			ReaderGUI.showWarningDialog(I18N.resourceBundle.getString("projectGenerator.projectMissingStream"));
-			return false;
-		}
+		// Adding "Default"-Stream to Stream-List
+		JSONParser.eventModel.getStreams().add(new Stream(null, "DefaultStream"));
 
 		for (Stream stream : JSONParser.eventModel.getStreams()) {
 			UUID projectID = stream.getId();
@@ -417,6 +414,9 @@ public class ProjectGenerator {
 	 * Stream (projectID), then searches for all Placements that are Commands and
 	 * Read Models that are connected to these specific Event-Placements.
 	 * 
+	 * If an Event belongs to the "Default"-Stream (if given projectID is 'null')
+	 * all related Objects will be added to a "DefaultStream" project.
+	 * 
 	 * @param projectID - ID of the current Bounded Context (Stream)
 	 * @return List<Placement> - A list containing all Placements belong to the
 	 *         current Bounded Context (Stream)
@@ -429,10 +429,18 @@ public class ProjectGenerator {
 		for (var placementEntry : JSONParser.eventModel.getPlacements().entrySet()) {
 			Placement placement = placementEntry.getValue();
 
-			if (placement.getNoteType().equals(NoteType.EVENT) && placement.getLaneType().equals(LaneType.STREAM)
-					&& placement.getLaneId().equals(projectID)) {
-				placementsInCurrentProject.add(placement);
-				eventPlacementIDs.add(placementEntry.getKey());
+			if (placement.getNoteType().equals(NoteType.EVENT) && placement.getLaneType().equals(LaneType.STREAM)) {
+				if (projectID == null) {
+					if (placement.getLaneId() == null) {
+						placementsInCurrentProject.add(placement);
+						eventPlacementIDs.add(placementEntry.getKey());
+					}
+				} else {
+					if (placement.getLaneId() != null && placement.getLaneId().equals(projectID)) {
+						placementsInCurrentProject.add(placement);
+						eventPlacementIDs.add(placementEntry.getKey());
+					}
+				}
 			}
 		}
 		// search for Commands that are connected to Event of current Stream
