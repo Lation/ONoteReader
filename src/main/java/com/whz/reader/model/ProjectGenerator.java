@@ -141,7 +141,6 @@ public class ProjectGenerator {
 				}
 
 				if (canCreateProject) {
-					createNamespace(projectSourcePath.replace("\\", "/") + "/" + projectNamespace.replace(".", "/"));
 					generateClasses(projectID, projectSourcePath, projectNamespace);
 				}
 			} else {
@@ -173,6 +172,27 @@ public class ProjectGenerator {
 	}
 
 	/**
+	 * Will call all the other methods to generate all the Java classes through the
+	 * given Event Model. Furthermore, adds a proper package name to the respective
+	 * namespace.
+	 * 
+	 * @param projectID         - ID of the Bounded Context (Stream) and therefore
+	 *                          of a separate project/namespace
+	 * @param projectSourcePath - Path of the project source folder
+	 * @param projectNamespace  - Namespace of the project
+	 */
+	private static void generateClasses(UUID projectID, String projectSourcePath, String projectNamespace) {
+		List<Placement> placementsOfProject = findPlacementsOfCurrentProject(projectID);
+		if (!placementsOfProject.isEmpty()) {
+			createNamespace(projectSourcePath.replace("\\", "/") + "/" + projectNamespace.replace(".", "/"));
+
+			createEvents(placementsOfProject, projectSourcePath, projectNamespace + ".events");
+			createCommands(placementsOfProject, projectSourcePath, projectNamespace + ".commands");
+			createReadModels(placementsOfProject, projectSourcePath, projectNamespace + ".readModels");
+		}
+	}
+
+	/**
 	 * Creates the given namespace path as a new directory and adds further key
 	 * folders for the to every project available. Any non-existent parent folders
 	 * will be created as well in the process.
@@ -189,24 +209,6 @@ public class ProjectGenerator {
 			log.info("Created directory: '" + namespacePath + "/readModels'");
 		if (new File(namespacePath + "/schemas").mkdirs())
 			log.info("Created directory: '" + namespacePath + "/schemas'");
-	}
-
-	/**
-	 * Will call all the other methods to generate all the Java classes through the
-	 * given Event Model. Furthermore, adds a proper package name to the respective
-	 * namespace.
-	 * 
-	 * @param projectID         - ID of the Bounded Context (Stream) and therefore
-	 *                          of a separate project/namespace
-	 * @param projectSourcePath - Path of the project source folder
-	 * @param projectNamespace  - Namespace of the project
-	 */
-	private static void generateClasses(UUID projectID, String projectSourcePath, String projectNamespace) {
-		List<Placement> placementsOfProject = findPlacementsOfCurrentProject(projectID);
-
-		createEvents(placementsOfProject, projectSourcePath, projectNamespace + ".events");
-		createCommands(placementsOfProject, projectSourcePath, projectNamespace + ".commands");
-		createReadModels(placementsOfProject, projectSourcePath, projectNamespace + ".readModels");
 	}
 
 	/**
