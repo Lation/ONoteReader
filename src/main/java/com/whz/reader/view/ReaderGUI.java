@@ -44,7 +44,7 @@ public class ReaderGUI extends JPanel implements ActionListener {
 	private static final Logger log = Logger.getLogger(ReaderGUI.class.getName());
 
 	private static final String APPLICATION_NAME = "oNote Reader";
-	private static final String PROJECT_ICON = "images/oNote_icon.png";
+	private static final String PROJECT_ICON = "images/ONoteReader_icon.png";
 	private static final String FOLDER_ICON = "images/folder_icon.png";
 
 	private final ReaderController controller;
