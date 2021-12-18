@@ -81,9 +81,11 @@ public class JavaFileWriter {
 		Map<String, String> fields = new HashMap<>();
 		String capitalizedClassName;
 		if (className != null) {
-			capitalizedClassName = className.substring(0, 1).toUpperCase() + className.substring(1);
+			String tempClassName = className.strip().replace(" ", "");
+			capitalizedClassName = tempClassName.substring(0, 1).toUpperCase() + tempClassName.substring(1);
 		} else {
-			capitalizedClassName = dataType.getName().substring(0, 1).toUpperCase() + dataType.getName().substring(1);
+			capitalizedClassName = dataType.getFormattedName().substring(0, 1).toUpperCase()
+					+ dataType.getFormattedName().substring(1);
 		}
 
 		String filePath = projectSourcePath + "/" + namespace.replace(".", "/") + "/" + capitalizedClassName + ".java";
@@ -176,7 +178,7 @@ public class JavaFileWriter {
 					Map<String, String> regexMap = parseRegexs(tempDataType);
 					if (!regexMap.isEmpty()) {
 						for (var regexEntry : regexMap.entrySet()) {
-							bw.write("\t" + "public static final String " + entry.getKey().toUpperCase() + "_REGEX"
+							bw.write("\t" + "public static final String " + regexEntry.getKey().toUpperCase() + "_REGEX"
 									+ " = \"" + regexEntry.getValue().replace("\\", "\\\\") + "\";");
 							bw.newLine();
 						}
@@ -190,11 +192,11 @@ public class JavaFileWriter {
 
 					String field = parseTypeArgument(tempDataType, false);
 					if (!field.isBlank()) {
-						fields.put(entry.getKey(), field);
+						fields.put(entry.getKey().strip().replace(" ", ""), field);
 
 						bw.write("\t" + "private ");
 						bw.write(field);
-						bw.write(" " + entry.getKey() + ";");
+						bw.write(" " + entry.getKey().strip().replace(" ", "") + ";");
 
 						if (tempDataType.getProperties() != null) {
 							bw.write(" //");
@@ -356,7 +358,8 @@ public class JavaFileWriter {
 		}
 
 		Map<String, String> fields = new HashMap<>();
-		String capitalizedClassName = className.substring(0, 1).toUpperCase() + className.substring(1);
+		String tempClassName = className.strip().replace(" ", "");
+		String capitalizedClassName = tempClassName.substring(0, 1).toUpperCase() + tempClassName.substring(1);
 
 		String filePath = projectSourcePath + "/" + namespace.replace(".", "/") + "/" + capitalizedClassName + ".java";
 
@@ -446,7 +449,7 @@ public class JavaFileWriter {
 					Map<String, String> regexMap = parseRegexs(tempDataType);
 					if (!regexMap.isEmpty()) {
 						for (var regexEntry : regexMap.entrySet()) {
-							bw.write("\t" + "public static final String " + entry.getKey().toUpperCase() + "_REGEX"
+							bw.write("\t" + "public static final String " + regexEntry.getKey().toUpperCase() + "_REGEX"
 									+ " = \"" + regexEntry.getValue().replace("\\", "\\\\") + "\";");
 							bw.newLine();
 						}
@@ -460,11 +463,11 @@ public class JavaFileWriter {
 
 					String field = parseTypeArgument(tempDataType, false);
 					if (!field.isBlank()) {
-						fields.put(entry.getKey(), field);
+						fields.put(entry.getKey().strip().replace(" ", ""), field);
 
 						bw.write("\t" + "private final ");
 						bw.write(field);
-						bw.write(" " + entry.getKey() + ";");
+						bw.write(" " + entry.getKey().strip().replace(" ", "") + ";");
 
 						if (tempDataType.getProperties() != null) {
 							bw.write(" //");
@@ -596,7 +599,8 @@ public class JavaFileWriter {
 	 * @param description       - The description of the Java enum
 	 */
 	public static void writeEnum(String projectSourcePath, String namespace, DataType dataType, String description) {
-		String capitalizedEnumName = dataType.getName().substring(0, 1).toUpperCase() + dataType.getName().substring(1);
+		String capitalizedEnumName = dataType.getFormattedName().substring(0, 1).toUpperCase()
+				+ dataType.getFormattedName().substring(1);
 
 		String filePath = projectSourcePath + "/" + namespace.replace(".", "/") + "/" + capitalizedEnumName + ".java";
 
@@ -629,14 +633,17 @@ public class JavaFileWriter {
 			}
 
 			// enum definition
-			List<String> symbols = dataType.getEnumList();
+			List<String> formattedSymbols = new ArrayList<>();
+			for (String enumName : dataType.getEnumList()) {
+				formattedSymbols.add(enumName.strip().replace(" ", ""));
+			}
 
 			bw.write("public enum " + capitalizedEnumName + " {");
 			bw.newLine();
 			bw.write("\t");
-			for (int i = 0; i < symbols.size(); i++) {
-				bw.write(symbols.get(i));
-				if (i < symbols.size() - 1) {
+			for (int i = 0; i < formattedSymbols.size(); i++) {
+				bw.write(formattedSymbols.get(i));
+				if (i < formattedSymbols.size() - 1) {
 					bw.write(", ");
 				}
 			}
@@ -719,13 +726,14 @@ public class JavaFileWriter {
 			schemaImports.addAll(parseSchemaImports(dataType.getMapValueDataType()));
 			break;
 		case MAP:
-			schemaImports.add(dataType.getName().substring(0, 1).toUpperCase() + dataType.getName().substring(1));
+			schemaImports.add(dataType.getFormattedName().substring(0, 1).toUpperCase()
+					+ dataType.getFormattedName().substring(1));
 			break;
 		case REF:
 			for (var schemaEntry : JSONParser.eventModel.getSchemas().entrySet()) {
 				if (dataType.getReference().equals(schemaEntry.getKey())) {
-					schemaImports.add(schemaEntry.getValue().getName().substring(0, 1).toUpperCase()
-							+ schemaEntry.getValue().getName().substring(1));
+					schemaImports.add(schemaEntry.getValue().getFormattedName().substring(0, 1).toUpperCase()
+							+ schemaEntry.getValue().getFormattedName().substring(1));
 					break;
 				}
 			}
@@ -751,7 +759,7 @@ public class JavaFileWriter {
 
 		switch (dataType.getSchemaType()) {
 		case RE:
-			regexMap.put(dataType.getName(), dataType.getRegex());
+			regexMap.put(dataType.getFormattedName(), dataType.getRegex());
 			break;
 		case VECTOR:
 		case SEQUENTIAL:
@@ -821,15 +829,17 @@ public class JavaFileWriter {
 					+ parseTypeArgument(dataType.getMapValueDataType(), true) + ">";
 			break;
 		case MAP:
-			typeArgument = dataType.getName().substring(0, 1).toUpperCase() + dataType.getName().substring(1);
+			typeArgument = dataType.getFormattedName().substring(0, 1).toUpperCase()
+					+ dataType.getFormattedName().substring(1);
 			break;
 		case ENUM:
-			typeArgument = dataType.getName().substring(0, 1).toUpperCase() + dataType.getName().substring(1);
+			typeArgument = dataType.getFormattedName().substring(0, 1).toUpperCase()
+					+ dataType.getFormattedName().substring(1);
 			break;
 		case REF:
 			for (var schemaEntry : JSONParser.eventModel.getSchemas().entrySet()) {
 				if (dataType.getReference().equals(schemaEntry.getKey())) {
-					typeArgument = schemaEntry.getValue().getName();
+					typeArgument = schemaEntry.getValue().getFormattedName();
 					break;
 				}
 			}
@@ -847,6 +857,10 @@ public class JavaFileWriter {
 	 * call itself recursively to search for any enums inside the nested DataType
 	 * objects. E.g. List<Vector<Map<Integer, Enum>>>
 	 * 
+	 * Additionally formats the String names of the enums inside the enum list to
+	 * delete unwanted spaces which would otherwise result in errors when naming
+	 * things in Java.
+	 * 
 	 * @param dataType - The DataType to examine for enums
 	 * @return - Map<String, List<String>> containing the nested enums of deeper
 	 *         DataType objects passed onto its parent recursively
@@ -856,7 +870,11 @@ public class JavaFileWriter {
 
 		switch (dataType.getSchemaType()) {
 		case ENUM:
-			enumMap.put(dataType.getName(), dataType.getEnumList());
+			List<String> formattedEnumList = new ArrayList<>();
+			for (String enumName : dataType.getEnumList()) {
+				formattedEnumList.add(enumName.strip().replace(" ", ""));
+			}
+			enumMap.put(dataType.getFormattedName(), formattedEnumList);
 			break;
 		case VECTOR:
 		case SEQUENTIAL:

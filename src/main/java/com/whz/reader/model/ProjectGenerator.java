@@ -119,8 +119,8 @@ public class ProjectGenerator {
 
 		for (Stream stream : JSONParser.eventModel.getStreams()) {
 			UUID projectID = stream.getId();
-			String tempProjectName = stream.getName().substring(0, 1).toUpperCase() + stream.getName().substring(1);
-			String projectName = tempProjectName.replace(" ", "");
+			String projectName = stream.getFormattedName().substring(0, 1).toUpperCase()
+					+ stream.getFormattedName().substring(1);
 
 			String warningMessage = InputValidator.validateNamespace(projectName);
 			if (warningMessage.isEmpty()) {
@@ -232,7 +232,7 @@ public class ProjectGenerator {
 						&& placementOfProject.getNoteId().equals(eventEntry.getKey())) {
 					Event event = eventEntry.getValue();
 					DataType dataType = null;
-					String eventName = event.getName();
+					String eventName = event.getFormattedName();
 					String description = event.getDescription();
 
 					for (var schemaEntry : JSONParser.eventModel.getSchemas().entrySet()) {
@@ -274,7 +274,7 @@ public class ProjectGenerator {
 						&& placementOfProject.getNoteId().equals(commandEntry.getKey())) {
 					Command command = commandEntry.getValue();
 					DataType dataType = null;
-					String commandName = command.getName();
+					String commandName = command.getFormattedName();
 					String description = command.getDescription();
 
 					for (var schemaEntry : JSONParser.eventModel.getSchemas().entrySet()) {
@@ -317,7 +317,7 @@ public class ProjectGenerator {
 						&& placementOfProject.getNoteId().equals(readModelEntry.getKey())) {
 					ReadModel readModel = readModelEntry.getValue();
 					DataType dataType = null;
-					String readModelName = readModel.getName();
+					String readModelName = readModel.getFormattedName();
 					String description = readModel.getDescription();
 
 					for (var schemaEntry : JSONParser.eventModel.getSchemas().entrySet()) {
