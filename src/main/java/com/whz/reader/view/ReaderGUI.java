@@ -43,7 +43,7 @@ public class ReaderGUI extends JPanel implements ActionListener {
 
 	private static final Logger log = Logger.getLogger(ReaderGUI.class.getName());
 
-	private static final String APPLICATION_NAME = "oNote Reader";
+	private static final String APPLICATION_NAME = "ONoteReader";
 	private static final String PROJECT_ICON = "images/ONoteReader_icon.png";
 	private static final String FOLDER_ICON = "images/folder_icon.png";
 
@@ -83,7 +83,7 @@ public class ReaderGUI extends JPanel implements ActionListener {
 	private JButton codeGenButton;
 
 	private final int windowWidth = 600;
-	private final int windowHeight = 380;
+	private final int windowHeight = 385;
 	private final int labelWidth = 156;
 	private final int scrollPaneHeight = 40;
 	private final int pathButtonWidth = 38;
@@ -183,7 +183,7 @@ public class ReaderGUI extends JPanel implements ActionListener {
 		// GroupLayout
 		verticalGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(headlineLabel)
 				.addComponent(languageComboBox, comboBoxHeight, comboBoxHeight, comboBoxHeight));
-		verticalGroup.addComponent(descriptionLabel).addGap(10, 10, 10);
+		verticalGroup.addComponent(descriptionLabel).addGap(15, 15, 15);
 		verticalGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(projectChooseLabel)
 				.addComponent(projectComboBox, comboBoxHeight, comboBoxHeight, comboBoxHeight));
 		verticalGroup.addGroup(layout.createParallelGroup(Alignment.CENTER).addComponent(projectPathLabelNew)
