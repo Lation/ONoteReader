@@ -71,7 +71,6 @@ public class JSONParser {
 	public static boolean parseJson(String jsonFileName) {
 		try (JsonReader jsonReader = new JsonReader(new FileReader(jsonFileName))) {
 			JsonElement jsonRootElement = JsonParser.parseReader(jsonReader);
-			System.out.println("JSON file: " + jsonRootElement.toString());
 
 			if (jsonRootElement.isJsonObject()) {
 				JsonObject jsonObject = jsonRootElement.getAsJsonObject();
