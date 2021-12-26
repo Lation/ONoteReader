@@ -47,8 +47,7 @@ public class InputValidator {
 				}
 			}
 		} else {
-			warningMessage += (!warningMessage.isEmpty()) ? "\n" : "";
-			warningMessage += I18N.resourceBundle.getString("validator.projectPathEmpty");
+			warningMessage = I18N.resourceBundle.getString("validator.projectPathEmpty");
 		}
 
 		if (!jsonPath.isBlank()) {
@@ -77,25 +76,27 @@ public class InputValidator {
 	public static String validateNamespace(String namespace) {
 		String warningMessage = "";
 
-		if (namespace.matches(NAMESPACE_REGEX)) {
-			String[] namespaceArray = namespace.split("\\.");
-			List<String> keywordList = FileBufferedReader.readFile(JAVA_KEYWORDS);
-			boolean isKeyword = false;
-			for (String packageName : namespaceArray) {
-				for (String keyword : keywordList) {
-					if (packageName.equals(keyword)) {
-						isKeyword = true;
+		if (!namespace.isBlank()) {
+			if (namespace.matches(NAMESPACE_REGEX)) {
+				String[] namespaceArray = namespace.split("\\.");
+				List<String> keywordList = FileBufferedReader.readFile(JAVA_KEYWORDS);
+				boolean isKeyword = false;
+				for (String packageName : namespaceArray) {
+					for (String keyword : keywordList) {
+						if (packageName.equals(keyword)) {
+							isKeyword = true;
+						}
 					}
 				}
-			}
-			if (isKeyword) {
-				warningMessage += (!warningMessage.isEmpty()) ? "\n" : "";
-				warningMessage += I18N.resourceBundle.getString("validator.noKeywords");
+				if (isKeyword) {
+					warningMessage = I18N.resourceBundle.getString("validator.noKeywords");
+				}
+			} else {
+				warningMessage = I18N.resourceBundle.getString("validator.notFollowingConventions") + " '" + namespace
+						+ "'";
 			}
 		} else {
-			warningMessage += (!warningMessage.isEmpty()) ? "\n" : "";
-			warningMessage += I18N.resourceBundle.getString("validator.notFollowingConventions") + " '" + namespace
-					+ "'";
+			warningMessage = I18N.resourceBundle.getString("validator.namespaceEmpty");
 		}
 
 		return warningMessage;
