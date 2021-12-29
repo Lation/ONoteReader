@@ -99,19 +99,19 @@ public class JavaFileWriter {
 			// imports
 			// - external
 			boolean importsNeeded = false;
+			Set<String> uniqueImports = new HashSet<>();
 			for (var entry : objectDataType.entrySet()) {
 				DataType tempDataType = entry.getValue();
-				Set<String> imports = parseImports(tempDataType);
-
-				if (!imports.isEmpty()) {
-					List<String> sortedImports = new ArrayList<>(imports);
-					Collections.sort(sortedImports);
-					for (String importString : sortedImports) {
-						bw.write("import java.util." + importString + ";");
-						bw.newLine();
-					}
-					importsNeeded = true;
+				uniqueImports.addAll(parseImports(tempDataType));
+			}
+			if (!uniqueImports.isEmpty()) {
+				List<String> sortedImports = new ArrayList<>(uniqueImports);
+				Collections.sort(sortedImports);
+				for (String importString : sortedImports) {
+					bw.write("import java.util." + importString + ";");
+					bw.newLine();
 				}
+				importsNeeded = true;
 			}
 			if (importsNeeded) {
 				bw.newLine();
@@ -372,19 +372,19 @@ public class JavaFileWriter {
 			// imports
 			// - external
 			boolean importsNeeded = false;
+			Set<String> uniqueImports = new HashSet<>();
 			for (var entry : objectDataType.entrySet()) {
 				DataType tempDataType = entry.getValue();
-				Set<String> imports = parseImports(tempDataType);
-
-				if (!imports.isEmpty()) {
-					List<String> sortedImports = new ArrayList<>(imports);
-					Collections.sort(sortedImports);
-					for (String importString : sortedImports) {
-						bw.write("import java.util." + importString + ";");
-						bw.newLine();
-					}
-					importsNeeded = true;
+				uniqueImports.addAll(parseImports(tempDataType));
+			}
+			if (!uniqueImports.isEmpty()) {
+				List<String> sortedImports = new ArrayList<>(uniqueImports);
+				Collections.sort(sortedImports);
+				for (String importString : sortedImports) {
+					bw.write("import java.util." + importString + ";");
+					bw.newLine();
 				}
+				importsNeeded = true;
 			}
 			if (importsNeeded) {
 				bw.newLine();
