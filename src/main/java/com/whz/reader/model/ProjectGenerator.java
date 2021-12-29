@@ -123,25 +123,29 @@ public class ProjectGenerator {
 					+ stream.getFormattedName().substring(1);
 
 			String warningMessage = InputValidator.validateNamespace(projectName);
+			List<Placement> placementsOfProject = findPlacementsOfCurrentProject(projectID);
+
 			if (warningMessage.isEmpty()) {
-				String projectNamespace = namespace + "." + projectName.substring(0, 1).toLowerCase()
-						+ projectName.substring(1);
-				String projectSourcePath = null;
-				boolean canCreateProject = false;
+				if (!placementsOfProject.isEmpty()) {
+					String projectNamespace = namespace + "." + projectName.substring(0, 1).toLowerCase()
+							+ projectName.substring(1);
+					String projectSourcePath = null;
+					boolean canCreateProject = false;
 
-				if (projectComboBoxIndex == 0) {
-					projectSourcePath = projectPath + "/" + projectName + "/src";
-					canCreateProject = createBasicProject(projectSourcePath.replace("\\", "/"));
-				} else if (projectComboBoxIndex == 1) {
-					projectSourcePath = projectPath;
-					canCreateProject = true;
-				} else {
-					log.warning(
-							"Only two project options possible but index was neither: '" + projectComboBoxIndex + "'");
-				}
+					if (projectComboBoxIndex == 0) {
+						projectSourcePath = projectPath + "/" + projectName + "/src";
+						canCreateProject = createBasicProject(projectSourcePath.replace("\\", "/"));
+					} else if (projectComboBoxIndex == 1) {
+						projectSourcePath = projectPath;
+						canCreateProject = true;
+					} else {
+						log.warning("Only two project options possible but index was neither: '" + projectComboBoxIndex
+								+ "'");
+					}
 
-				if (canCreateProject) {
-					generateClasses(projectID, projectSourcePath, projectNamespace);
+					if (canCreateProject) {
+						generateClasses(projectID, projectSourcePath, projectNamespace, placementsOfProject);
+					}
 				}
 			} else {
 				ReaderGUI.showWarningDialog(warningMessage);
@@ -181,15 +185,13 @@ public class ProjectGenerator {
 	 * @param projectSourcePath - Path of the project source folder
 	 * @param projectNamespace  - Namespace of the project
 	 */
-	private static void generateClasses(UUID projectID, String projectSourcePath, String projectNamespace) {
-		List<Placement> placementsOfProject = findPlacementsOfCurrentProject(projectID);
-		if (!placementsOfProject.isEmpty()) {
-			createNamespace(projectSourcePath.replace("\\", "/") + "/" + projectNamespace.replace(".", "/"));
+	private static void generateClasses(UUID projectID, String projectSourcePath, String projectNamespace,
+			List<Placement> placementsOfProject) {
+		createNamespace(projectSourcePath.replace("\\", "/") + "/" + projectNamespace.replace(".", "/"));
 
-			createEvents(placementsOfProject, projectSourcePath, projectNamespace + ".events");
-			createCommands(placementsOfProject, projectSourcePath, projectNamespace + ".commands");
-			createReadModels(placementsOfProject, projectSourcePath, projectNamespace + ".readModels");
-		}
+		createEvents(placementsOfProject, projectSourcePath, projectNamespace + ".events");
+		createCommands(placementsOfProject, projectSourcePath, projectNamespace + ".commands");
+		createReadModels(placementsOfProject, projectSourcePath, projectNamespace + ".readModels");
 	}
 
 	/**
