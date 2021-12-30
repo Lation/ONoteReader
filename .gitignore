@@ -37,3 +37,6 @@ dependency-reduced-pom.xml
 *.zip
 *.tar.gz
 *.rar
+
+# Eception #
+!ONoteReader.jar
