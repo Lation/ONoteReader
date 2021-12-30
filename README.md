@@ -11,7 +11,7 @@ Every information contained within the JSON file will be used to generate the Ja
 
 ## Prerequisites
 
-The project was delevoped with [Maven][maven] and [JDK 11][jdk11]. External libraries used for the development are [Gson][gson] and [JUnit 5][junit5].
+The project was delevoped with [Maven][maven] and [JDK 11][jdk11]. External libraries used for development are [Gson][gson] and [JUnit 5][junit5].
 
 The target version of the project JAR file is Java Version 11 as well.
 
@@ -23,6 +23,11 @@ The target version of the project JAR file is Java Version 11 as well.
 - A user can declare a new namespace, use a default namespace (main), or use the Schema namespace of the event model.
 - The application supports internationalization (I18N) currently with the languages English (default) and German.
 - An example that can be used to try out ONoteReader is provided via the JSON file "apprenticeship_system_example.0.1.0-beta.json" which represents a generic and simple apprenticeship system - modeled via oNote.
+
+## Known Issues
+
+- The encoding used in this project is UTF-8, therefore a user should make sure that the workspace for the imported project is set to the same encoding.
+- If there are still any issues with the encoding a user might need to add the argument "-Dfile.encoding=UTF-8" when running the project JAR file.
 
 [maven]: https://maven.apache.org/
 [gson]: https://github.com/google/gson
