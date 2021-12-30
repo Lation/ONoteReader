@@ -22,6 +22,7 @@ The target version of the project JAR file is Java Version 11 as well.
 - A user can provide the project path where the project shall be generated and the path of the JSON file to use.
 - A user can declare a new namespace, use a default namespace (main), or use the Schema namespace of the event model.
 - The application supports internationalization (I18N) currently with the languages English (default) and German.
+- An example that can be used to try out ONoteReader is provided via the JSON file "apprenticeship_system_example.0.1.0-beta.json" which represents a generic and simple apprenticeship system - modeled via oNote.
 
 [maven]: https://maven.apache.org/
 [gson]: https://github.com/google/gson
