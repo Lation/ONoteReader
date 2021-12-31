@@ -178,7 +178,7 @@ public class JavaFileWriter {
 					Map<String, String> regexMap = parseRegexs(tempDataType);
 					if (!regexMap.isEmpty()) {
 						for (var regexEntry : regexMap.entrySet()) {
-							bw.write("\t" + "public static final String " + regexEntry.getKey().toUpperCase() + "_REGEX"
+							bw.write("\t" + "public static final String " + entry.getKey().toUpperCase() + "_REGEX"
 									+ " = \"" + regexEntry.getValue().replace("\\", "\\\\") + "\";");
 							bw.newLine();
 						}
@@ -449,7 +449,7 @@ public class JavaFileWriter {
 					Map<String, String> regexMap = parseRegexs(tempDataType);
 					if (!regexMap.isEmpty()) {
 						for (var regexEntry : regexMap.entrySet()) {
-							bw.write("\t" + "public static final String " + regexEntry.getKey().toUpperCase() + "_REGEX"
+							bw.write("\t" + "public static final String " + entry.getKey().toUpperCase() + "_REGEX"
 									+ " = \"" + regexEntry.getValue().replace("\\", "\\\\") + "\";");
 							bw.newLine();
 						}
