@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 public class ImageIconReaderTest {
 
 	@Test
-	public void testCannotAccessFile() {
-		Assertions.assertThrows(NullPointerException.class, () -> ImageIconReader.readImage(null));
+	public void testCanAccessProjectIcon() {
+		Assertions.assertDoesNotThrow(() -> ImageIconReader.readImage("images/ONoteReader_icon.png"));
 	}
 
 	@Test
-	public void testCanAccessFile() {
+	public void testCanAccessFolderIcon() {
 		Assertions.assertDoesNotThrow(() -> ImageIconReader.readImage("images/folder_icon.png"));
 	}
 
